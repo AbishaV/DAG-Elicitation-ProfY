@@ -1,0 +1,417 @@
+{
+    "domain": "supply chain disruption",
+    "target_outcome": "delivery delays",
+    "mode": "live",
+    "started_at": "2026-03-30T14:00:00",
+    "completed_at": "2026-03-30T15:45:00",
+    "phases": [
+        {
+            "phase_name": "variable_discovery",
+            "profy_prompt": "Let's start by mapping out the territory. Think about the supply chain from raw materials all the way through to final delivery. What are the major factors that Nora identifies as drivers of delivery delays? I'm looking for both the external shocks that trigger disruptions and the internal operational factors that determine how badly those shocks propagate.\n\nStart broad. We can always trim later, but we can't analyze what we don't name.",
+            "ally_response": "From talking to Nora, the big drivers she keeps coming back to are port congestion, fuel prices, and geopolitical instability. Those are the external shocks. Internally, she says supplier reliability is a constant headache, and when raw materials are scarce, everything downstream slows down. Labor shortages at the docks have gotten worse since 2020 and she thinks that's a major factor in port backlogs. On the demand side, she says volatility in customer orders makes it hard to plan inventory. Production capacity gets squeezed when energy costs spike or when they can't get materials. The downstream effects she cares most about are delivery delays and shipping costs, and she sees order lead time and inventory levels as the key intermediaries.",
+            "variables_extracted": [
+                "geopolitical_risk",
+                "fuel_prices",
+                "port_congestion",
+                "labor_shortages",
+                "supplier_reliability",
+                "raw_material_availability",
+                "production_capacity",
+                "demand_volatility",
+                "shipping_cost",
+                "order_lead_time",
+                "inventory_levels",
+                "delivery_delays"
+            ],
+            "edges_extracted": [],
+            "timestamp": "2026-03-30T14:05:00"
+        },
+        {
+            "phase_name": "edge_probing",
+            "profy_prompt": "Good, we have 12 variables on the board. Now let's figure out which ones are connected by direct causal arrows and in which direction. I'll work through these systematically, starting with the variables closest to the target outcome (delivery delays) and working backward.\n\nFirst set: What does Nora say about the direct causes of delivery delays? Which of these variables, if we could intervene on them, would directly change delivery timelines?\n\nSecond: What about shipping cost? What directly drives it up or down?\n\nThird: For each relationship, I need to know: is this direct, or does it pass through something else first?",
+            "ally_response": "For delivery delays, Nora points to three direct causes. Port congestion is the most obvious: ships waiting at anchor means everything downstream gets pushed back. Order lead time matters because longer lead times mean more exposure to disruption and tighter windows. And inventory levels, because when stock is low, you can't fulfill orders from what's on hand.\n\nFor shipping cost, fuel prices are the biggest direct driver since fuel is the main variable cost in freight. Port congestion adds demurrage and surcharges. And Nora was emphatic about this one: low inventory forces the team into emergency air freight, which costs 5-10x more than standard shipping.\n\nWorking backward: geopolitical risk doesn't hit delays directly. It goes through port congestion (rerouting, closures), fuel prices (energy market disruption), supplier reliability (supplier region instability), and raw material availability (sanctions, embargoes). Labor shortages directly affect port congestion through reduced throughput, and production capacity through understaffing on the factory floor. Supplier reliability affects raw material availability (unreliable supplier means unreliable material flow) and order lead time (variable supplier performance extends lead times). Raw material scarcity directly constrains production capacity. Demand volatility affects inventory levels (surges deplete stock) and order lead time (demand spikes overload the pipeline). Production capacity feeds into inventory levels since you can't stock what you can't produce.\n\nNora explicitly said fuel prices do NOT directly cause delays. Carriers charge more but don't slow down. And she said geopolitical risk to delivery delays is always mediated, never direct.",
+            "variables_extracted": [],
+            "edges_extracted": [
+                [
+                    "port_congestion",
+                    "delivery_delays",
+                    "ships waiting at port push back downstream timelines"
+                ],
+                [
+                    "order_lead_time",
+                    "delivery_delays",
+                    "longer lead times increase exposure to disruption"
+                ],
+                [
+                    "inventory_levels",
+                    "delivery_delays",
+                    "low stock means orders can't be fulfilled from inventory"
+                ],
+                [
+                    "fuel_prices",
+                    "shipping_cost",
+                    "fuel is the primary variable cost component in freight"
+                ],
+                [
+                    "port_congestion",
+                    "shipping_cost",
+                    "congestion creates demurrage fees and surcharges"
+                ],
+                [
+                    "inventory_levels",
+                    "shipping_cost",
+                    "low inventory triggers emergency air freight at 5-10x cost"
+                ],
+                [
+                    "geopolitical_risk",
+                    "port_congestion",
+                    "conflicts cause rerouting and port closures"
+                ],
+                [
+                    "geopolitical_risk",
+                    "fuel_prices",
+                    "geopolitical events disrupt energy markets"
+                ],
+                [
+                    "geopolitical_risk",
+                    "supplier_reliability",
+                    "instability in supplier regions disrupts operations"
+                ],
+                [
+                    "geopolitical_risk",
+                    "raw_material_availability",
+                    "sanctions and embargoes restrict material access"
+                ],
+                [
+                    "labor_shortages",
+                    "port_congestion",
+                    "fewer dockworkers reduces port throughput"
+                ],
+                [
+                    "labor_shortages",
+                    "production_capacity",
+                    "understaffing limits factory output"
+                ],
+                [
+                    "supplier_reliability",
+                    "raw_material_availability",
+                    "unreliable suppliers mean unreliable material flow"
+                ],
+                [
+                    "supplier_reliability",
+                    "order_lead_time",
+                    "variable supplier performance extends lead times"
+                ],
+                [
+                    "raw_material_availability",
+                    "production_capacity",
+                    "can't produce without raw inputs"
+                ],
+                [
+                    "demand_volatility",
+                    "inventory_levels",
+                    "demand surges deplete stock"
+                ],
+                [
+                    "demand_volatility",
+                    "order_lead_time",
+                    "demand spikes overload the fulfillment pipeline"
+                ],
+                [
+                    "production_capacity",
+                    "inventory_levels",
+                    "production shortfall reduces available stock"
+                ],
+                [
+                    "fuel_prices",
+                    "production_capacity",
+                    "energy cost spikes constrain manufacturing output"
+                ]
+            ],
+            "timestamp": "2026-03-30T14:25:00"
+        },
+        {
+            "phase_name": "mechanism_questioning",
+            "profy_prompt": "We have 19 proposed edges. That's a substantial graph. Now I need to stress-test each one. For the edges I'm going to challenge, I need you to tell me the mechanism: not just that A affects B, but HOW and THROUGH WHAT.\n\nLet me flag the ones I want to probe hardest:\n\n1. fuel_prices -> production_capacity: How exactly does fuel price affect how much a factory can produce?\n2. inventory_levels -> shipping_cost: You mentioned emergency air freight. Is this really a causal mechanism, or is it a decision response?\n3. demand_volatility -> order_lead_time: Does demand actually cause longer lead times, or do they just co-occur during disruptions?\n4. geopolitical_risk -> raw_material_availability: Is this always direct, or does it sometimes go through supplier_reliability first?\n\nWalk me through Nora's reasoning on each.",
+            "ally_response": "1. Fuel prices to production capacity: Nora said manufacturing runs on energy. When fuel and energy costs spike, production becomes more expensive per unit. Factories respond by cutting shifts, slowing lines, or idling capacity that's no longer profitable to run. It's not that the machines physically can't operate, it's that the economics force a reduction. She gave the example of European chemical plants shutting down production lines in 2022 when natural gas prices spiked. So the mechanism is: fuel/energy cost increase -> production becomes uneconomical at margin -> capacity reduced.\n\n2. Inventory levels to shipping cost: Good challenge. Nora said it's both. Low inventory is the trigger, but the response (switching to air freight) is a decision. However, she argues it's effectively causal in practice because the decision is nearly automatic. When safety stock breaks a threshold, the procurement playbook says switch to expedited shipping. There's no real deliberation. She said 'when inventory hits red, we air freight, every time, no discussion.' So while technically a decision, it functions as a causal mechanism in the system.\n\n3. Demand volatility to order lead time: Nora distinguished two mechanisms. First, when demand surges, the order processing queue gets longer because more orders compete for the same fulfillment capacity. That's a direct throughput effect. Second, demand spikes trigger larger orders to suppliers, who then take longer to fulfill because they're also capacity constrained. So it's not just co-occurrence. There's a real queue-based mechanism.\n\n4. Geopolitical risk to raw material availability: Nora said there are two distinct pathways. Sometimes it's direct: a sanction blocks export of a specific material, and availability drops overnight regardless of supplier status. Other times it's mediated: instability disrupts the supplier's operations, and material availability drops because the supplier can't deliver. She said both pathways are real and operate simultaneously in some cases. She'd keep both the direct edge and the indirect path through supplier reliability.",
+            "variables_extracted": [],
+            "edges_extracted": [],
+            "timestamp": "2026-03-30T14:50:00"
+        },
+        {
+            "phase_name": "confounder_probing",
+            "profy_prompt": "The mechanisms check out. Now let's look for hidden common causes. I want to make sure we're not missing a variable that's driving two things at once and creating a false association.\n\nSpecific pairs I want you to think about:\n\n1. Port congestion and shipping cost both appear to be affected by geopolitical risk. Is there anything ELSE that drives both simultaneously that we haven't captured?\n2. Could demand volatility be confounding the relationship between inventory levels and delivery delays? (Demand surges deplete inventory AND strain delivery capacity.)\n3. Is there a common cause of fuel prices and port congestion that isn't geopolitical risk? They tend to spike together during disruptions.\n4. Any variable Nora mentioned that we haven't included? Something that affects multiple things in the graph at once?",
+            "ally_response": "1. Port congestion and shipping cost: Nora thought about this and said seasonal demand patterns can drive both. Peak shipping seasons (pre-holiday) congest ports AND spike freight rates simultaneously. But she said demand volatility already captures this in our model. The seasonal component is just one form of demand variation. She doesn't think we need a separate seasonal variable at this level of detail.\n\n2. Demand volatility confounding inventory-delay link: Yes, Nora flagged this. Demand surges both deplete inventory and independently strain fulfillment capacity. But she said the inventory to delay link is still real even controlling for demand. Even in periods of stable demand, if inventory drops because of a production problem, delays follow. So demand is a confounder here, but the direct inventory to delay path still exists. Important that demand volatility is in the graph as a parent of both.\n\n3. Common cause of fuel and congestion beyond geopolitics: Nora said not really. In her experience, when fuel and congestion spike together outside of a geopolitical event, it's usually because one is causing the other (congestion increases fuel burn for waiting ships) rather than a hidden common cause. She considered whether global economic cycles drive both but said that's too diffuse to be useful at this level. She's comfortable with geopolitical risk as the main common driver.\n\n4. Missing variables: Nora mentioned regulatory changes (new customs requirements, environmental rules) and weather/natural disasters. She said weather events are important in practice but episodic and hard to build into a structural model. Regulatory changes she'd save for a more detailed version. For this model, she thinks the 12 variables capture the core story without missing anything that would invalidate the structure.",
+            "variables_extracted": [],
+            "edges_extracted": [],
+            "timestamp": "2026-03-30T15:15:00"
+        },
+        {
+            "phase_name": "checkpoint",
+            "profy_prompt": "Here's a plain-language summary of where the graph stands. This is what you'd show Nora for validation.\n\n---\n\nSUPPLY CHAIN DISRUPTION: CAUSAL MAP (DRAFT)\n\nWe identified 12 factors that drive delivery delays and shipping costs in the supply chain.\n\nTHREE EXTERNAL TRIGGERS (nothing in this model explains why they happen, they just happen):\n- Geopolitical risk (wars, sanctions, trade disputes)\n- Labor shortages (dockworkers, factory workers)\n- Demand volatility (unpredictable swings in customer orders)\n\nHOW DISRUPTIONS FLOW:\n- Geopolitical events hit four things at once: they spike fuel prices, congest ports through rerouting, destabilize suppliers, and restrict raw material access through sanctions.\n- Labor shortages slow down ports (fewer dockworkers) and factories (understaffed production lines).\n- Demand swings eat into inventory and overload the order pipeline, extending lead times.\n- Fuel costs directly raise shipping prices and make some production uneconomical.\n- Unreliable suppliers create material shortages and extend order lead times.\n- Material scarcity constrains production, which depletes inventory.\n- Low inventory causes two problems: orders can't be filled on time (delays), and procurement switches to expensive emergency shipping (cost).\n\nTHE TWO OUTCOMES:\n- Delivery delays are driven by port congestion, long order lead times, and low inventory.\n- Shipping costs are driven by fuel prices, port congestion surcharges, and emergency shipping from low inventory.\n\nEDGES WE EXPLICITLY REJECTED:\n- Fuel prices do NOT directly cause delivery delays (carriers charge more but don't slow down).\n- Geopolitical risk does NOT directly cause delivery delays (always mediated through ports, suppliers, or materials).\n\n---\n\nDoes this match what Nora told you? Anything to correct or add?",
+            "ally_response": "This is accurate. I'd show this to Nora as-is. The two explicitly rejected edges are important. Nora was very clear that fuel prices affect cost, not timing, and that geopolitical risk is always mediated. The only thing I'd add to the summary is that the inventory to shipping cost link is driven by a specific operational rule: when safety stock breaks a threshold, procurement automatically switches to air freight. That's not just a tendency, it's policy. But structurally, the graph is correct. 12 variables, 19 edges, and Nora would recognize this as her mental model formalized.",
+            "variables_extracted": [],
+            "edges_extracted": [],
+            "timestamp": "2026-03-30T15:40:00"
+        }
+    ],
+    "final_variables": [
+        {
+            "name": "geopolitical_risk",
+            "description": "Wars, sanctions, trade disputes, political instability",
+            "phase_discovered": "variable_discovery",
+            "source": "expert",
+            "status": "confirmed"
+        },
+        {
+            "name": "fuel_prices",
+            "description": "Cost of fuel/energy affecting transport and production",
+            "phase_discovered": "variable_discovery",
+            "source": "expert",
+            "status": "confirmed"
+        },
+        {
+            "name": "port_congestion",
+            "description": "Backlogs and queuing at shipping ports",
+            "phase_discovered": "variable_discovery",
+            "source": "expert",
+            "status": "confirmed"
+        },
+        {
+            "name": "labor_shortages",
+            "description": "Insufficient workforce at docks and factories",
+            "phase_discovered": "variable_discovery",
+            "source": "expert",
+            "status": "confirmed"
+        },
+        {
+            "name": "supplier_reliability",
+            "description": "Consistency of supplier delivery and quality performance",
+            "phase_discovered": "variable_discovery",
+            "source": "expert",
+            "status": "confirmed"
+        },
+        {
+            "name": "raw_material_availability",
+            "description": "Access to required production inputs",
+            "phase_discovered": "variable_discovery",
+            "source": "expert",
+            "status": "confirmed"
+        },
+        {
+            "name": "production_capacity",
+            "description": "Effective manufacturing output given constraints",
+            "phase_discovered": "variable_discovery",
+            "source": "expert",
+            "status": "confirmed"
+        },
+        {
+            "name": "demand_volatility",
+            "description": "Unpredictable swings in customer order volume",
+            "phase_discovered": "variable_discovery",
+            "source": "expert",
+            "status": "confirmed"
+        },
+        {
+            "name": "shipping_cost",
+            "description": "Total cost of transporting goods from origin to destination",
+            "phase_discovered": "variable_discovery",
+            "source": "expert",
+            "status": "confirmed"
+        },
+        {
+            "name": "order_lead_time",
+            "description": "Time between order placement and expected delivery",
+            "phase_discovered": "variable_discovery",
+            "source": "expert",
+            "status": "confirmed"
+        },
+        {
+            "name": "inventory_levels",
+            "description": "Available stock relative to demand and safety thresholds",
+            "phase_discovered": "variable_discovery",
+            "source": "expert",
+            "status": "confirmed"
+        },
+        {
+            "name": "delivery_delays",
+            "description": "Late arrival of goods beyond promised delivery date",
+            "phase_discovered": "variable_discovery",
+            "source": "expert",
+            "status": "confirmed"
+        }
+    ],
+    "final_edges": [
+        {
+            "cause": "geopolitical_risk",
+            "effect": "fuel_prices",
+            "mechanism": "Geopolitical events disrupt energy markets and spike fuel costs",
+            "phase_discovered": "edge_probing",
+            "source": "expert",
+            "status": "confirmed",
+            "rejection_reason": ""
+        },
+        {
+            "cause": "geopolitical_risk",
+            "effect": "port_congestion",
+            "mechanism": "Conflicts cause vessel rerouting and port closures",
+            "phase_discovered": "edge_probing",
+            "source": "expert",
+            "status": "confirmed",
+            "rejection_reason": ""
+        },
+        {
+            "cause": "geopolitical_risk",
+            "effect": "supplier_reliability",
+            "mechanism": "Political instability in supplier regions disrupts operations",
+            "phase_discovered": "edge_probing",
+            "source": "expert",
+            "status": "confirmed",
+            "rejection_reason": ""
+        },
+        {
+            "cause": "geopolitical_risk",
+            "effect": "raw_material_availability",
+            "mechanism": "Sanctions and embargoes directly restrict material exports",
+            "phase_discovered": "edge_probing",
+            "source": "expert",
+            "status": "confirmed",
+            "rejection_reason": ""
+        },
+        {
+            "cause": "fuel_prices",
+            "effect": "shipping_cost",
+            "mechanism": "Fuel is the primary variable cost component in freight rates",
+            "phase_discovered": "edge_probing",
+            "source": "expert",
+            "status": "confirmed",
+            "rejection_reason": ""
+        },
+        {
+            "cause": "fuel_prices",
+            "effect": "production_capacity",
+            "mechanism": "Energy cost spikes make marginal production uneconomical, reducing output",
+            "phase_discovered": "edge_probing",
+            "source": "expert",
+            "status": "confirmed",
+            "rejection_reason": ""
+        },
+        {
+            "cause": "port_congestion",
+            "effect": "shipping_cost",
+            "mechanism": "Congestion creates demurrage fees, detention charges, and surcharges",
+            "phase_discovered": "edge_probing",
+            "source": "expert",
+            "status": "confirmed",
+            "rejection_reason": ""
+        },
+        {
+            "cause": "port_congestion",
+            "effect": "delivery_delays",
+            "mechanism": "Ships waiting at port push back the entire downstream delivery timeline",
+            "phase_discovered": "edge_probing",
+            "source": "expert",
+            "status": "confirmed",
+            "rejection_reason": ""
+        },
+        {
+            "cause": "labor_shortages",
+            "effect": "port_congestion",
+            "mechanism": "Fewer dockworkers reduces port throughput, building queues",
+            "phase_discovered": "edge_probing",
+            "source": "expert",
+            "status": "confirmed",
+            "rejection_reason": ""
+        },
+        {
+            "cause": "labor_shortages",
+            "effect": "production_capacity",
+            "mechanism": "Factory understaffing directly limits manufacturing output",
+            "phase_discovered": "edge_probing",
+            "source": "expert",
+            "status": "confirmed",
+            "rejection_reason": ""
+        },
+        {
+            "cause": "raw_material_availability",
+            "effect": "production_capacity",
+            "mechanism": "Cannot produce without required raw inputs",
+            "phase_discovered": "edge_probing",
+            "source": "expert",
+            "status": "confirmed",
+            "rejection_reason": ""
+        },
+        {
+            "cause": "supplier_reliability",
+            "effect": "raw_material_availability",
+            "mechanism": "Unreliable suppliers create inconsistent material flow",
+            "phase_discovered": "edge_probing",
+            "source": "expert",
+            "status": "confirmed",
+            "rejection_reason": ""
+        },
+        {
+            "cause": "supplier_reliability",
+            "effect": "order_lead_time",
+            "mechanism": "Variable supplier performance creates longer and less predictable lead times",
+            "phase_discovered": "edge_probing",
+            "source": "expert",
+            "status": "confirmed",
+            "rejection_reason": ""
+        },
+        {
+            "cause": "production_capacity",
+            "effect": "inventory_levels",
+            "mechanism": "Production shortfall directly reduces stock available for distribution",
+            "phase_discovered": "edge_probing",
+            "source": "expert",
+            "status": "confirmed",
+            "rejection_reason": ""
+        },
+        {
+            "cause": "demand_volatility",
+            "effect": "inventory_levels",
+            "mechanism": "Demand surges deplete available stock",
+            "phase_discovered": "edge_probing",
+            "source": "expert",
+            "status": "confirmed",
+            "rejection_reason": ""
+        },
+        {
+            "cause": "demand_volatility",
+            "effect": "order_lead_time",
+            "mechanism": "Demand spikes overload the fulfillment pipeline, extending processing time",
+            "phase_discovered": "edge_probing",
+            "source": "expert",
+            "status": "confirmed",
+            "rejection_reason": ""
+        },
+        {
+            "cause": "order_lead_time",
+            "effect": "delivery_delays",
+            "mechanism": "Longer lead times increase exposure to disruption and tighten delivery windows",
+            "phase_discovered": "edge_probing",
+            "source": "expert",
+            "status": "confirmed",
+            "rejection_reason": ""
+        },
+        {
+            "cause": "inventory_levels",
+            "effect": "delivery_delays",
+            "mechanism": "Low stock means orders cannot be fulfilled from available inventory",
+            "phase_discovered": "edge_probing",
+            "source": "expert",
+            "status": "confirmed",
+            "rejection_reason": ""
+        },
+        {
+            "cause": "inventory_levels",
+            "effect": "shipping_cost",
+            "mechanism": "Low inventory triggers automatic switch to emergency air freight at 5-10x cost",
+            "phase_discovered": "edge_probing",
+            "source": "expert",
+            "status": "confirmed",
+            "rejection_reason": ""
+        }
+    ]
+}

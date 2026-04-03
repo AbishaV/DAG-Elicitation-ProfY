@@ -89,11 +89,11 @@ def get_node_colors(G: nx.DiGraph) -> list:
     colors = []
     for n in G.nodes:
         if G.in_degree(n) == 0:
-            colors.append("#4ECDC4")   # teal for exogenous
+            colors.append("#3498DB")   # blue for exogenous
         elif G.out_degree(n) == 0:
-            colors.append("#FF6B6B")   # coral for outcomes
+            colors.append("#E74C3C")   # red for outcomes
         else:
-            colors.append("#95E1D3")   # light green for mediators
+            colors.append("#F9E79F")   # soft yellow for mediators
     return colors
 
 

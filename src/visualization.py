@@ -299,11 +299,11 @@ def plot_comparison(
             node_colors_elicited.append("#DDDDDD")
         elif n in elicited.nodes:
             if elicited.in_degree(n) == 0:
-                node_colors_elicited.append("#4ECDC4")
+                node_colors_elicited.append("#3498DB")
             elif elicited.out_degree(n) == 0:
-                node_colors_elicited.append("#FF6B6B")
+                node_colors_elicited.append("#E74C3C")
             else:
-                node_colors_elicited.append("#95E1D3")
+                node_colors_elicited.append("#F9E79F")
         else:
             node_colors_elicited.append("#DDDDDD")
 

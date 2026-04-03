@@ -19,6 +19,16 @@ The core argument of this chapter: LLMs are not reliable causal reasoners on the
 5. **Visualization**: color-coded side-by-side DAG comparison (correct, missing, extra, reversed edges)
 6. **Estimation**: backdoor adjustment sets via the validated DAG, doubly robust causal effect estimation on simulated data
 
+## Data
+
+The simulated supply chain dataset is included in `data/simulated_supply_chain.csv`.
+
+For the real data analysis (Part 9 of the notebook), download the DataCo Smart Supply Chain dataset from Kaggle:
+
+1. Go to https://www.kaggle.com/datasets/shashwatwork/dataco-smart-supply-chain-for-big-data-analysis
+2. Download `DataCoSupplyChainDataset.csv`
+3. Save it to the `data/` folder
+
 ## Case Study Domain
 
 Supply chain disruption, focused on delivery delays and shipping costs. 12 variables, 19 edges, grounded in published supply chain risk management literature (Chopra & Sodhi 2004, Ho et al. 2015, Bai et al. 2024, and others). Full edge-by-edge citations in `docs/ground_truth_dag_citations.md`.
